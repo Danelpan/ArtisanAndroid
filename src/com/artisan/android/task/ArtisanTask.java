@@ -4,10 +4,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ArtisanTask {
 	
@@ -47,25 +50,25 @@ public final class ArtisanTask {
 		return this;
 	}
 	
-	public final <Params> ArtisanTask runOnThreadPool(long timeout,IArtisanTaskListener<Params> listener){
-		runOnThreadPool(obtainExecutor(),null,timeout, listener);
-		return this;
-	}	
+//	public final <Params> ArtisanTask runOnThreadPool(long timeout,IArtisanTaskListener<Params> listener){
+//		runOnThreadPool(THREAD_POOL_EXECUTOR,null,timeout, listener);
+//		return this;
+//	}	
 	
 	public final <Params> ArtisanTask runOnThreadPool(Params params,long timeout,IArtisanTaskListener<Params> listener){
-		runOnThreadPool(obtainExecutor(),params,timeout, listener);
+		runOnThreadPool(THREAD_POOL_EXECUTOR,params,timeout, listener);
 		return this;
 	}
 	
-	public final <Params> ArtisanTask runOnThreadPool(ExecutorService service,long timeout,IArtisanTaskListener<Params> listener){
+	public final <Params> ArtisanTask runOnThreadPool(Executor service,long timeout,IArtisanTaskListener<Params> listener){
 		runOnThreadPool(service,null,timeout,listener);
 		return this;
 	}
 	
-	public final <Params> ArtisanTask runOnThreadPool(ExecutorService service,Params params,long timeout,IArtisanTaskListener<Params> listener){
+	public final <Params> ArtisanTask runOnThreadPool(Executor service,Params params,long timeout,IArtisanTaskListener<Params> listener){
 		listener.onStarted(params);
 		ArtisanWorker task = initialTask(params, timeout, listener);
-		service.submit(task);
+		service.execute(task);
 		return this;
 	}
 	
@@ -83,18 +86,6 @@ public final class ArtisanTask {
 		return worker;
 	}
 	
-	private final ExecutorService obtainExecutor(){
-		return new ThreadPoolExecutor(2, obtainProcessors(),0L, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());
-	}
-	
-	private final int obtainProcessors() {
-		int size = Runtime.getRuntime().availableProcessors();
-		if(size<=0){
-			size = 1;
-		}
-		return size * 2;
-	}
-	
 	private void addWorker(ArtisanWorker worker){
 		trimWorker();
 		workers.add(worker);
@@ -109,4 +100,24 @@ public final class ArtisanTask {
 			}
 		}
 	}
+	
+	private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
+	private static final int CORE_POOL_SIZE = CPU_COUNT + 1;
+	private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;
+	private static final int KEEP_ALIVE = 1;
+
+	private static final ThreadFactory sThreadFactory = new ThreadFactory() {
+		private final AtomicInteger mCount = new AtomicInteger(1);
+
+		public Thread newThread(Runnable r) {
+			return new Thread(r, "AsyncTask #" + mCount.getAndIncrement());
+		}
+	};
+
+	private static final BlockingQueue<Runnable> sPoolWorkQueue = new LinkedBlockingQueue<Runnable>(128);
+
+	/**
+	 * An {@link Executor} that can be used to execute tasks in parallel.
+	 */
+	public static final Executor THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS,sPoolWorkQueue, sThreadFactory);
 }

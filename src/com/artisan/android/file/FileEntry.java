@@ -1,12 +1,14 @@
 package com.artisan.android.file;
 
 import java.io.File;
+import java.util.List;
 
 import com.artisan.android.task.ArtisanTask;
 import com.artisan.android.task.IArtisanTaskListener;
 import com.artisan.android.utility.LogUtility;
 
 
+@SuppressWarnings("rawtypes")
 abstract class FileEntry<T>{
 	
 	public static final int KEY_READ = 0x1;
@@ -14,6 +16,14 @@ abstract class FileEntry<T>{
 	
 	private IFileReadListener<T> readListener;
 	private IFileWriteListener writeListener;
+	
+	private ArtisanTask task = new ArtisanTask();
+	
+	private List<FileEntry> entries;
+	
+	public FileEntry(List<FileEntry> entries){
+		this.entries = entries;
+	}
 	
 	public IFileReadListener<T> getReadListener() {
 		return readListener;
@@ -40,9 +50,12 @@ abstract class FileEntry<T>{
 	}
 	
 	public void start(int key,File file ,T source){
-		ArtisanTask task = new ArtisanTask();
 		ProcessFile processFile = new ProcessFile(file, source);
 		task.runOnThreadPool(key, processFile);
+	}
+	
+	public void destory(){
+		task.destory();
 	}
 	
 	class ProcessFile implements IArtisanTaskListener<Integer>{
@@ -59,12 +72,12 @@ abstract class FileEntry<T>{
 			switch (params) {
 			case KEY_READ:
 				if (null != readListener) {
-					readListener.onStarted();
+					readListener.onStarted(file);
 				}
 				break;
 			case KEY_WRITE:
 				if (null != writeListener) {
-					writeListener.onStarted();
+					writeListener.onStarted(file);
 				}
 				break;
 			default:
@@ -91,6 +104,7 @@ abstract class FileEntry<T>{
 		@SuppressWarnings("unchecked")
 		@Override
 		public void onSucceeded(Integer params, Object result) {
+			entries.remove(FileEntry.this);
 			LogUtility.d("File process success...");
 			switch (params) {
 			case KEY_READ:
@@ -110,16 +124,17 @@ abstract class FileEntry<T>{
 
 		@Override
 		public void onFailed(Integer params, Throwable throwable) {
+			entries.remove(FileEntry.this);
 			LogUtility.d("File process fail...",throwable);
 			switch (params) {
 			case KEY_READ:
 				if (null != readListener) {
-					readListener.onFailed(throwable);
+					readListener.onFailed(file,throwable);
 				}
 				break;
 			case KEY_WRITE:
 				if (null != writeListener) {
-					writeListener.onFailed(throwable);
+					writeListener.onFailed(file,throwable);
 				}
 				break;
 			default:

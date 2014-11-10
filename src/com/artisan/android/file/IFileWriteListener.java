@@ -4,9 +4,9 @@ import java.io.File;
 
 
 public interface IFileWriteListener {
-	void onStarted();
+	void onStarted(File file);
 	
 	void onSucceeded(File file);
 	
-	void onFailed(Throwable throwable);
+	void onFailed(File file,Throwable throwable);
 }

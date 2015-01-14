@@ -23,10 +23,10 @@ public final class ArtisanTask {
 		return this;
 	}
 	
-//	public final <Params> ArtisanTask runOnThread(long timeout,IArtisanTaskListener<Params> listener){
-//		runOnThread(null,timeout, listener);
-//		return this;
-//	}
+	public final <Params> ArtisanTask runOnThread(Long timeout,IArtisanTaskListener<Params> listener){
+		runOnThread(null,timeout, listener);
+		return this;
+	}
 	
 	public final <Params> ArtisanTask runOnThread(Params params,IArtisanTaskListener<Params> listener){
 		runOnThread(params,-1L, listener);
@@ -75,6 +75,7 @@ public final class ArtisanTask {
 	public final void destory(){
 		for (ArtisanWorker task : workers) {
 			task.destory(true);
+			task.cancel(true);
 		}
 		workers.clear();
 	}
@@ -110,7 +111,7 @@ public final class ArtisanTask {
 		private final AtomicInteger mCount = new AtomicInteger(1);
 
 		public Thread newThread(Runnable r) {
-			return new Thread(r, "AsyncTask #" + mCount.getAndIncrement());
+			return new Thread(r, "ArtisanTask #" + mCount.getAndIncrement());
 		}
 	};
 

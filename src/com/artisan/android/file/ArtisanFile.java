@@ -17,28 +17,28 @@ public final class ArtisanFile {
 	}
 	
 	public final void writeStr(String path,String source,IFileWriteListener listener){
-		StringEntry entry = new StringEntry(entries);
+		FileEntry<String> entry = new StringEntry(entries);
 		addEntries(entry);
 		entry.setWriteListener(listener);
 		entry.startWrite(new File(path), source);
 	}
 	
 	public final void readStr(String path,IFileReadListener<String> listener){
-		StringEntry entry = new StringEntry(entries);
+		FileEntry<String> entry = new StringEntry(entries);
 		addEntries(entry);
 		entry.setReadListener(listener);
 		entry.startRead(new File(path));
 	}
 	
 	public final void writeBmp(String path,Bitmap source,IFileWriteListener listener){
-		BitmapEntry entry = new BitmapEntry(entries);
+		FileEntry<Bitmap> entry = new BitmapEntry(entries);
 		addEntries(entry);
 		entry.setWriteListener(listener);
 		entry.startWrite(new File(path), source);
 	}
 	
 	public final void readBmp(String path,IFileReadListener<Bitmap> listener){
-		BitmapEntry entry = new BitmapEntry(entries);
+		FileEntry<Bitmap> entry = new BitmapEntry(entries);
 		addEntries(entry);
 		entry.setReadListener(listener);
 		entry.startRead(new File(path));

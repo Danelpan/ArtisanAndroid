@@ -64,7 +64,7 @@ public class LogUtility {
 	}
 	
 	public static final void e(String tag,String msg, Throwable throwable) {
-		e(tag, '\n' + Log.getStackTraceString(throwable));
+		e(tag,msg+ '\n' + Log.getStackTraceString(throwable));
 	}
 	
 	public static final void e(String tag,String msg,Object... args){
@@ -91,7 +91,7 @@ public class LogUtility {
 	}
 	
 	public static void i(String tag,String msg, Throwable throwable) {
-		i(tag, '\n' + Log.getStackTraceString(throwable));
+		i(tag,msg+ '\n' + Log.getStackTraceString(throwable));
 	}
 	
 	public static final void i(String tag,String msg,Object... args){
@@ -118,7 +118,7 @@ public class LogUtility {
 	}
 	
 	public static final void v(String tag,String msg, Throwable throwable) {
-		v(tag, '\n' + Log.getStackTraceString(throwable));
+		v(tag,msg+ '\n' + Log.getStackTraceString(throwable));
 	}
 	
 	public static final void v(String tag,String msg,Object... args){
@@ -145,7 +145,7 @@ public class LogUtility {
 	}
 	
 	public static final void w(String tag,String msg, Throwable throwable) {
-		v(tag, '\n' + Log.getStackTraceString(throwable));
+		v(tag,msg + '\n' + Log.getStackTraceString(throwable));
 	}
 	
 	public static final void w(String tag,String msg,Object... args){
@@ -172,7 +172,7 @@ public class LogUtility {
 	}
 	
 	public static final void wtf(String tag,String msg, Throwable throwable) {
-		v(tag, '\n' + Log.getStackTraceString(throwable));
+		v(tag,msg + '\n' + Log.getStackTraceString(throwable));
 	}
 	
 	public static final void wtf(String tag,String msg,Object... args){

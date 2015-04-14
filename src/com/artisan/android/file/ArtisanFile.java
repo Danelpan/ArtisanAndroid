@@ -16,32 +16,52 @@ public final class ArtisanFile {
 		return new ArtisanFile();
 	}
 	
-	public final void writeStr(String path,String source,IFileWriteListener listener){
+	public final void asyncWrite(String path,String source,IFileWriteListener listener){
 		FileEntry<String> entry = new StringEntry(entries);
 		addEntries(entry);
 		entry.setWriteListener(listener);
 		entry.startWrite(new File(path), source);
 	}
 	
-	public final void readStr(String path,IFileReadListener<String> listener){
+	public final void asyncReadString(String path,IFileReadListener<String> listener){
 		FileEntry<String> entry = new StringEntry(entries);
 		addEntries(entry);
 		entry.setReadListener(listener);
 		entry.startRead(new File(path));
 	}
 	
-	public final void writeBmp(String path,Bitmap source,IFileWriteListener listener){
+	public final void asyncWrite(String path,Bitmap source,IFileWriteListener listener){
 		FileEntry<Bitmap> entry = new BitmapEntry(entries);
 		addEntries(entry);
 		entry.setWriteListener(listener);
 		entry.startWrite(new File(path), source);
 	}
 	
-	public final void readBmp(String path,IFileReadListener<Bitmap> listener){
+	public final void asyncReadBitmap(String path,IFileReadListener<Bitmap> listener){
 		FileEntry<Bitmap> entry = new BitmapEntry(entries);
 		addEntries(entry);
 		entry.setReadListener(listener);
 		entry.startRead(new File(path));
+	}
+	
+	public final void syncWrite(String path,String source){
+		FileEntry<String> entry = new StringEntry();
+		entry.write(new File(path), source);
+	}
+	
+	public final String syncReadString(String path){
+		FileEntry<String> entry = new StringEntry();
+		return entry.read(new File(path));
+	}
+	
+	public final void syncWrite(String path,Bitmap source){
+		FileEntry<Bitmap> entry = new BitmapEntry();
+		entry.write(new File(path), source);
+	}
+	
+	public final Bitmap syncReadBitmap(String path){
+		FileEntry<Bitmap> entry = new BitmapEntry();
+		return entry.read(new File(path));
 	}
 	
 	public final void destory(){

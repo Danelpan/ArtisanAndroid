@@ -9,6 +9,8 @@ import com.artisan.android.utility.FileUtility;
 @SuppressWarnings("rawtypes")
 class StringEntry extends FileEntry<String>{
 
+	public StringEntry(){}
+	
 	public StringEntry(List<FileEntry> entries) {
 		super(entries);
 	}

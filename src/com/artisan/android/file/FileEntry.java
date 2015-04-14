@@ -21,6 +21,8 @@ abstract class FileEntry<T>{
 	
 	private List<FileEntry> entries;
 	
+	public FileEntry(){}
+	
 	public FileEntry(List<FileEntry> entries){
 		this.entries = entries;
 	}

@@ -11,6 +11,8 @@ import com.artisan.android.utility.BitmapUtility;
 @SuppressWarnings("rawtypes")
 class BitmapEntry extends FileEntry<Bitmap>{
 	
+	public BitmapEntry(){}
+	
 	public BitmapEntry(List<FileEntry> entries) {
 		super(entries);
 	}

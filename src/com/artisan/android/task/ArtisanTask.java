@@ -23,13 +23,8 @@ public final class ArtisanTask {
 		return this;
 	}
 	
-	public final <Params> ArtisanTask runOnThread(Long timeout,IArtisanTaskListener<Params> listener){
-		runOnThread(null,timeout, listener);
-		return this;
-	}
-	
 	public final <Params> ArtisanTask runOnThread(Params params,IArtisanTaskListener<Params> listener){
-		runOnThread(params,-1L, listener);
+		runOnThread(params,-1L,listener);
 		return this;
 	}
 	
@@ -50,18 +45,8 @@ public final class ArtisanTask {
 		return this;
 	}
 	
-//	public final <Params> ArtisanTask runOnThreadPool(long timeout,IArtisanTaskListener<Params> listener){
-//		runOnThreadPool(THREAD_POOL_EXECUTOR,null,timeout, listener);
-//		return this;
-//	}	
-	
 	public final <Params> ArtisanTask runOnThreadPool(Params params,long timeout,IArtisanTaskListener<Params> listener){
 		runOnThreadPool(THREAD_POOL_EXECUTOR,params,timeout, listener);
-		return this;
-	}
-	
-	public final <Params> ArtisanTask runOnThreadPool(Executor service,long timeout,IArtisanTaskListener<Params> listener){
-		runOnThreadPool(service,null,timeout,listener);
 		return this;
 	}
 	

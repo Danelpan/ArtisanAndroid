@@ -18,16 +18,5 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/diandian_1" />
-
-    <ImageView
-        android:id="@+id/image_heart"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/black_heart" />
 
 </FrameLayout>
